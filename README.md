@@ -42,8 +42,13 @@ para mas información se puede visitar el siguiente link:
 
 - [como usar lsof en linux](https://help.clouding.io/hc/es/articles/5797810889500-C%C3%B3mo-usar-el-comando-lsof-en-Linux#:~:text=lsof%20significa%20%22list%20open%20files,similar%20a%20netstat%20o%20ss.)
 
-## **Conexión cliente servidor desde computador windows a servidor debian***
+## **Conexión cliente servidor desde computador windows a servidor debian**
 
+Se pretende realizar una conexión por medio del protocolo TCP entre windows y debian, para ello se realiza un proceso edición en el script de python tanto del lado del cliente (windows), como del servidor (debian):
+
+- script python lado del cliente (windows)
+
+![](./images/cltcpw.png)
 
 
 
