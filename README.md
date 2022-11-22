@@ -50,6 +50,18 @@ Se pretende realizar una conexión por medio del protocolo TCP entre windows y d
 
 ![](./images/cltcpw.png)
 
+- script python lado del servidor (debian); tener en cuenta colocar la dirección ip 0.0.0.0, ya que indica que puede comunicarse con cualquier dispositivo que se dirige al puerto 10000:
+
+![](./images/stcpd.png)
+
+AL verificar la conexión del lado del servidor nos muestra la dirección ip del lado del cliente:
+
+![](./images/sd.png)
+
+![](./images/wip.png)
+
+
+
 
 
 
