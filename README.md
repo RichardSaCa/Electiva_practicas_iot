@@ -67,6 +67,30 @@ El primer paso es instalar el servidor NodeJS y NestJS en la maquina debian, a c
 
 ![](./images/node-v.png)
 
+Luego se crea un proyecto NestJS, con el comando **nest new nombre-proyecto**, donde se crea una carpeta con los siguientes archivos:
+
+![](./images/nestjs.png)
+
+Dentro de los archivos se encuentra ___package.json___ que permite observar la estructura de datos del proyecto:
+
+![](./images/package.png)
+
+para iniciar el ejemplo Hello World se ejecuta el comando ___npm run start:dev___, mostrando el siguiente resultado:
+
+![](./images/runnode.png)
+
+para comprobar su ejecución también se puede observar el puerto disponible, que para este caso de estudio es el 3000:
+
+![](./images/puerto3000.png)
+
+Al ingresar la dirección se puede observar el correcto funcionamiento con la salida ___Hello World___ en el navegador:
+
+![](./images/helloworld.png)
+
+También se puede observar la salida mostrando la dirección ip de la maquina (___192.168.101.4:3000___):
+
+![](./images/iphello.png)
+
 
 
 
