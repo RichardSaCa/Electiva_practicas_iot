@@ -63,6 +63,9 @@ AL verificar la conexión del lado del servidor nos muestra la dirección ip del
 
 # PRÁCTICA 2
 
+El primer paso es instalar el servidor NodeJS y NestJS en la maquina debian, a continuación se compruebra la instalación:
+
+![](./images/node-v.png)
 
 
 
