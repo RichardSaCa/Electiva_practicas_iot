@@ -61,6 +61,7 @@ AL verificar la conexión del lado del servidor nos muestra la dirección ip del
 ![](./images/wip.png)
 
 
+# PRÁCTICA 2
 
 
 
