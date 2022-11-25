@@ -91,13 +91,53 @@ También se puede observar la salida mostrando la dirección ip de la maquina (_
 
 ![](./images/iphello.png)
 
+## ***Los verbos HTTP:***
+
+Para trabajas con mayor comodidad se se accede a los archivos de la maquina linux a través de Remote SSH en Visual Studio Code:
+
+![](./images/vs.png)
+
+Modificación del archivo `app.controller.ts` para colocar el mensaje `Hola Richard Sanchez`, que se ejecutara por defecto debido al método @GET():
+
+![](./images/holarichard.png)
+
+Al ejecutarlo en el navegador se observa los siguiente:
+
+![](./images/narichard.png)
+
+### ___Método POST___
+
+Este método permite realizar una modificación al invocarlo, por lo tanto, se agrega a través de @POST() con el objetivo de modificar la palabra nombre:  
+
+    import { Controller, Get, Param, Post } from '@nestjs/common';
+    import { AppService } from './app.service';
+
+    @Controller()
+    export class AppController {
+        constructor(private readonly appService: AppService) {}
 
 
+    private persona = "Mundo";
 
+    @Get()
+        getHello(): string {
+        return `Hola: ${this.persona}`
+    }
 
+    @Post(':nombre')
+        modificar(@Param('nombre') nombre: string): string {
+        this.persona = nombre;
+        return `Mensaje modificado: ${this.persona}`
+    }
+    }
 
+A continuación se modifica a través del método @POST(), el nombre a `MESSI`:
 
+![](./images/post.png)
 
+En el navegador se puede comprobar el cambio por medio del método @GET():
+
+![](./images/napost.png)
 
 
 
