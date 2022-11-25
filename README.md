@@ -139,6 +139,134 @@ En el navegador se puede comprobar el cambio por medio del método @GET():
 
 ![](./images/napost.png)
 
+### ___Crud para modificar una entidad (implementación verbos HTTP)___
+
+Para verificar cada uno de los verbos se crea un objeto denominado `Computador` el cual tiene los siguientes atributos; color, marca, ramGB. La validación de cada verbo se hará través de `POSTMAN`. El archivo `app.controller.ts`, es el siguiente:
+
+    import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common';
+    import { AppService } from './app.service';
+
+    interface Computador {
+    color: string,
+    marca: string,
+    ramGB: number
+    }
+
+    @Controller()
+    export class AppController {
+    constructor(private readonly appService: AppService) { }
+
+    private computadores: Computador[] = [{
+        color: "negro",
+        marca: "hp",
+        ramGB: 12
+    }]
+
+    @Get()
+    getHello(): Computador[] {
+        return this.computadores;
+    }
+
+    @Post()
+    crear(@Body() datos: Computador): Computador {
+        this.computadores.push(datos);
+        return datos;
+    }
+
+    @Put(":id")
+    modificar(@Body() datos: Computador, @Param('id') id: number): Computador | string {
+        try {
+        this.computadores[id] = datos
+        return this.computadores[id];
+        }
+        catch {
+        return `No fue posible modificar el computador en la posición ${id}`
+        }
+    }
+
+    @Delete(":id")
+    eliminar(@Param('id') id: number) {
+        try {
+        this.computadores = this.computadores.filter((val, index) => index != id);
+        return true;
+        }
+        catch {
+        return false;
+        }
+    }
+
+    @Patch(":id/ramGB/:ramGB")
+    cambiarEdad(@Param('id') id: number, @Param('ramGB') ramGB: number): Computador | string {
+        try {
+        this.computadores[id].ramGB = ramGB;
+        return this.computadores[id];
+        }
+        catch {
+        return `No fue posible modificar al computador en la posición ${id}`
+        }
+    }
+    }
+
+### Método GET
+
+Permite observar los atributos del objeto creado `Computador` al realizar la ejecución con la url:
+
+![](./images/compget.png)
+
+Algo similar se logra observar con el software `Postman`:
+
+![](./images/compget1.png)
+ 
+### Método POST
+
+Vamos a crear un nuevo recurso, es decir un computador por medio de un archivo `json`:
+
+![](./images/postjs.png)
+
+Ahora con la ayuda de `Postman`, accedemos al link con el método POST que actualiza el objeto computador en base al archivo json:
+
+![](./images/postcre.png)
+
+Para verificar la actualización accedemos al link con el método GET:
+
+![](./images/postveri.png)
+
+### Método PUT
+
+Vamos actualizar por completo el Computador de la marca asus identificado con `id 1` por medio de un archivo json. A continuación se muestra el proceso de ejecución en Postman:
+
+![](./images/putpo.png)
+
+Y verificamos con el método get los cambios:
+
+![](./images/putcam.png)
+
+### Método DELETE
+
+Vamos a eliminar por completo el computador que creamos inicialmente en el código, para ello se ingresa en Postman el link con la ubicación del objeto a eliminar que para nuestro caso es `0`:
+
+![](./images/delete.png)
+
+Y verificamos con el método get los cambios:
+
+![](./images/deleteget.png)
+
+### Método PATCH
+
+Para estudiar su funcionamiento vamos a modificar la ram del computador Lenovo a 16 GB. Para ello especificamos en el link la posición o id correspondiente al objeto creado y digitamos la ram que se quiere actualizar:
+
+![](./images/patch.png)
+
+Y verificamos con el método get los cambios:
+
+![](./images/patchget1.png)
+
+
+
+
+
+
+
 
 
 
