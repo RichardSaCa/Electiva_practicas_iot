@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get,Inject, Param, Patch, Post, Put,UseGuards } from '@nestjs/common';
 import { Portatil } from '../domain/models/portatil.model';
 import { PortatilService } from '../domain/services/portatil.service';
+import { AuthGuard } from '@nestjs/passport';
 
 const errReturn = (e: Error, message: string) => {
   return {
@@ -10,7 +11,7 @@ const errReturn = (e: Error, message: string) => {
 }
 
 @Controller()
-export class PortatilController {
+export class PortatilController  implements PortatilController{
   constructor(private readonly portatil1Service: PortatilService) { }
 
   @Get()
@@ -22,6 +23,8 @@ export class PortatilController {
       return errReturn(e, "Error al listar portatil");
     }
   }
+
+  @UseGuards(AuthGuard('local')) 
 
   @Post()
   crear(@Body() datos: Portatil) {
