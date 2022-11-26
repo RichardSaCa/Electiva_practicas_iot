@@ -261,15 +261,144 @@ Y verificamos con el método get los cambios:
 
 ![](./images/patchget1.png)
 
+# PRÁCTICA 3
 
+### Arquitectura Hexagonal
 
+Para implementar la arquitectura se estructuro a partir de la entidad Computador, sin embargo, como este es muy amplio se especifica las características para un portátil:
 
+1. Se modela los datos dentro de la carpeta models dentro de domain creando el archivo Computador de manera general `computador.ts`
 
+        export abstract class Computador {
+        color: string;
+        marca: string;
+        ramGB: number;
+        }
 
+2. Para extender el modelo a un portátil:
 
+        import { Computador } from "./computador";
 
+        export class Portatil extends Computador {
+        gama: string = "No definida";
+        }
 
+3. Migrar la funcionalidad del controlador a un servicio. Proceso realizado en `portatil.service.ts` dentro de `services`:
 
+        import { Injectable } from '@nestjs/common';
+        import { Portatil } from '../models/portatil.model';
+
+        @Injectable()
+        export class PortatilService {
+
+        private portatil: Portatil[] = [{
+            color: 'negro',
+            marca: 'hp',
+            ramGB: 10,
+            gama: 'media'
+        }]
+
+        public listar() : Portatil[] {
+            return this.portatil
+        }
+
+        public crear(portatil1: Portatil): Portatil {
+            this.portatil.push(portatil1);
+            return portatil1;
+        }
+
+        public modificar(id: number, portatil1: Portatil): Portatil {
+            this.portatil[id] = portatil1
+            return this.portatil[id];
+        }
+
+        public eliminar(id: number): boolean {
+            const totalportatilesAntes = this.portatil.length;
+            this.portatil = this.portatil.filter((val, index) => index != id);
+            if(totalportatilesAntes == this.portatil.length){
+            return false;
+            }
+            else{
+            return true;
+            }
+        }
+
+        public cambiarRam(id: number, ramGB: number): Portatil {
+            this.portatil[id].ramGB = ramGB;
+            return this.portatil[id];
+        }
+
+        }
+
+4. Se modifica el archivo `portatiles.controller.ts`, para implementar el servicio. Ademas, se adiciona bloques try/catch para manejar errores:
+
+        import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common';
+        import { Portatil } from '../domain/models/portatil.model';
+        import { PortatilService } from '../domain/services/portatil.service';
+
+        const errReturn = (e: Error, message: string) => {
+        return {
+            message: message,
+            error: e
+        }
+        }
+
+        @Controller()
+        export class PortatilController {
+        constructor(private readonly portatil1Service: PortatilService) { }
+
+        @Get()
+        getHello() {
+            try{
+            return this.portatil1Service.listar();
+            }
+            catch(e){
+            return errReturn(e, "Error al listar portatiles");
+            }
+        }
+
+        @Post()
+        crear(@Body() datos: Portatil) {
+            try{
+            return this.portatil1Service.crear(datos);
+            }
+            catch(e){
+            return errReturn(e, "Error al crear portatil");
+            }
+        }
+
+        @Put(":id")
+        modificar(@Body() datos: Portatil, @Param('id') id: number) {
+            try{
+            return this.portatil1Service.modificar(id, datos);
+            }
+            catch(e){
+            return errReturn(e, "Error al modificar portatil");
+            }
+        }
+
+        @Delete(":id")
+        eliminar(@Param('id') id: number) {
+            try{
+            return this.portatil1Service.eliminar(id);
+            }
+            catch(e){
+            return errReturn(e, "Error al eliminar portatil");
+            }
+        }
+
+        @Patch(":id/ramGB/:ramGB")
+        cambiarEdad(@Param('id') id: number, @Param('ramGB') ramGB: number) {
+            try{
+            return this.portatil1Service.cambiarRam(id, ramGB);
+            }
+            catch(e){
+            return errReturn(e, "Error al modificar edad del portatil");
+            }
+        }
+        }
+
+5. Se comprueba el funcionamiento realizando una petición GET y se realiza un commit en la rama hexagonal denominado "Arquitectura hexagonal implementada"
 
 
 
