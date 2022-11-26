@@ -400,8 +400,143 @@ Para implementar la arquitectura se estructuro a partir de la entidad Computador
 
 5. Se comprueba el funcionamiento realizando una petición GET y se realiza un commit en la rama hexagonal denominado "Arquitectura hexagonal implementada"
 
+### Implementando seguridad:
+
+1. Instalación del paquete `@nestjs/passport y passport`:
+
+![](./images/npm.png)
+
+2. Se crea modulo de autenticación y usuarios con los siguientes comandos:
+
+![](./images/nest.png)
+
+![](./images/users.png)
+
+3. Los archivos y carpeta creada son los siguientes:
+
+![](./images/auth.png)
 
 
+4. Implementación del servicio de usuarios en el archivo `users.service.ts`:
+
+        import { Injectable } from '@nestjs/common';
 
 
+        export type User = {
+            userId: number,
+            username: string,
+            password: string
+        };
+        
+        @Injectable()
+        export class UsersService {
+            private readonly users: User[] = [
+            {
+                userId: 1,
+                username: 'john',
+                password: 'changeme',
+            },
+            {
+                userId: 2,
+                username: 'maria',
+                password: 'guess',
+            },
+            ];
+        
+            /**
+            * Recupera los datos del usuario
+            * @param username Nombre de usuario
+            * @returns 
+            */
+            async findOne(username: string): Promise<User | undefined> {
+            return this.users.find(user => user.username === username);
+            }
+        }
 
+5. modifica el archivo `users.module.ts` para garantizar disponibilidad para otros servicios instanciados:
+
+        import { Module } from '@nestjs/common';
+        import { UsersService } from './users.service';
+
+        @Module({
+        providers: [UsersService],
+        exports: [UsersService], // Exporta el servicio
+        })
+        export class UsersModule {}
+
+6. Se implementa el servicio de autenticación que suele estar aislado:
+
+import { Injectable } from '@nestjs/common';
+import { UsersService } from '../users/users.service';
+
+        @Injectable()
+        export class AuthService {
+        constructor(private usersService: UsersService) {}
+
+        async validateUser(username: string, pass: string): Promise<any> {
+            const user = await this.usersService.findOne(username);
+            if (user && user.password === pass) {
+                const { password, ...result } = user;
+                return result;
+            }
+            return null;
+        }
+        }
+
+7. Se habilita el servicio de autenticación:
+
+        import { Module } from '@nestjs/common';
+        import { AuthService } from './auth.service';
+        import { UsersModule } from '../users/users.module';
+
+        @Module({
+        imports: [UsersModule], // Importa el módulo de usuarios
+        providers: [AuthService]
+        })
+        export class AuthModule {}
+
+8. Implementación de estrategia para validar usuario creando el archivo `local.strategy.ts` dentro de la carpeta `src/auth`:
+
+        import { Strategy } from 'passport-local';
+        import { PassportStrategy } from '@nestjs/passport';
+        import { Injectable, UnauthorizedException } from '@nestjs/common';
+        import { AuthService } from './auth.service';
+
+        @Injectable()
+        export class LocalStrategy extends PassportStrategy(Strategy) {
+        constructor(private authService: AuthService) {
+            super();
+        }
+
+        async validate(username: string, password: string): Promise<any> {
+            const user = await this.authService.validateUser(username, password);
+            if (!user) {
+                throw new UnauthorizedException();
+            }
+            return user;
+        }
+        }
+
+9. Se configura modulo de autenticación para utilizar la estrategia implementada anteriormente:
+
+            import { Module } from '@nestjs/common';
+            import { AuthService } from './auth.service';
+            import { UsersModule } from '../users/users.module';
+            import { PassportModule } from '@nestjs/passport';
+            import { LocalStrategy } from './local.strategy';
+
+            @Module({
+            imports: [UsersModule, PassportModule],
+            providers: [AuthService, LocalStrategy]
+            })
+            export class AuthModule {}
+
+10. Finalmente se protegen los enpoints desarrollados modificando respectivamente el controlador.
+
+11. vamos a realizar un POST para verifcar que efectivamente al no ingresar el usuario y contraseña el servidor no autoriza la modificación:
+
+![](./images/una.png)
+
+Para poder acceder y realizar modificaciones se deben ingresar las credenciales de usuairo como se muestra a continuación:
+
+![](./images/postau.png)
