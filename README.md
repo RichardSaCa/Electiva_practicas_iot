@@ -540,3 +540,94 @@ import { UsersService } from '../users/users.service';
 Para poder acceder y realizar modificaciones se deben ingresar las credenciales de usuairo como se muestra a continuación:
 
 ![](./images/postau.png)
+
+### Autenticación con JWT:
+
+1. Realizamos el proceso de instalación del paquete jwt (`@nestjs/jwt`):
+
+![](./images/jwti.png)
+
+2. Modificación del archivo `auth.service.ts`:
+
+        import { Injectable } from '@nestjs/common';
+        import { JwtService } from '@nestjs/jwt';
+        import { UsersService } from '../users/users.service';
+
+        @Injectable()
+        export class AuthService {
+        constructor(
+        private usersService: UsersService,
+        private jwtService: JwtService
+        ) {}
+
+        async validateUser(username: string, pass: string): Promise<any> {
+            const user = await this.usersService.findOne(username);
+            if (user && user.password === pass) {
+                const { password, ...result } = user;
+                return result;
+            }
+            return null;
+        }
+
+        async login(user: any) {
+            const payload = { username: user.username, sub: user.userId };
+            return {
+                access_token: this.jwtService.sign(payload),
+            };
+        }
+        }
+
+3. Se realizan los pasos correspondientes de la sesion `III. Autenticación con JWT`, desde 3 hasta el 8, que consiste en la modificación de diferentes archivos.
+
+4. Al ejecutar el comando `curl -X POST http://localhost:3000/auth/login -d '{"username": "john", "password": "changeme" }' -H "Content-Type: application/json"`, en la terminal se puede obervar que se genera un token JWT:
+
+![](./images/token.png)
+
+5. ahora se adicion la siguiente linea de codigo `@UseGuards(JwtAuthGuard)` en el archivo `portatiles.controller.ts` para proteger el endpoint POST:
+
+![](./images/jwtf.png)
+
+6. Ahora para comprobar su funcionamiento agregamos un nuevo computador pero ingresando el token creado anteriormente:
+
+![](./images/tokeng.png)
+
+y verificamos la correcta creación del computador:
+
+![](./images/tokencre.png)
+
+### endpoint protegidos con JWT verbo DELETE:
+
+Vamos a eliminar el computador apple, para ello agregamos la anotación `@UseGuards(JwtAuthGuard)`, antes del metodo DELETE:
+
+![](./images/deletejwt.png)
+
+Para facilitar el trabajo utilizamos el software postman creando una variable de entorno denominada `jwt` que contiene el token:
+
+![](./images/tokenp.png)
+
+Posteriormente con el verbo DELETE, creamos en encabezado de llave autorización que tambien contiene el token:
+
+![](./images/deletea.png)
+
+Al presionar enviar se elimina el registro en la posición 1, el resultado en postman es el siguiente:
+
+![](./images/deleteok1.png)
+
+Y verificamos en el navegador la eliminacion del registro:
+
+![](./images/deleteok2.png)
+
+### endpoint protegidos con JWT verbo PATH:
+
+Ahora vamos a modificar la Ram del computador de 10 GB a 30 GB, para ello agregamos `@UseGuards(JwtAuthGuard)` antes del metodo PATH:
+
+![](./images/patchjwt.png)
+
+Utilizando el encabezado de autorización y la variable de entorno dentro del metodo PATCH modificamos la ram del computador `hp` de la siguiente manera:
+
+![](./images/patchok.png)
+
+Y verificamos en el navegador el correcto cambio:
+
+![](./images/patchok1.png)
+
