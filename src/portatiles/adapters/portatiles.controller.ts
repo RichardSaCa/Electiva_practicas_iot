@@ -2,6 +2,8 @@ import { Body, Controller, Delete, Get,Inject, Param, Patch, Post, Put,UseGuards
 import { Portatil } from '../domain/models/portatil.model';
 import { PortatilService } from '../domain/services/portatil.service';
 import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+
 
 const errReturn = (e: Error, message: string) => {
   return {
@@ -23,8 +25,9 @@ export class PortatilController  implements PortatilController{
       return errReturn(e, "Error al listar portatil");
     }
   }
-
-  @UseGuards(AuthGuard('local')) 
+  
+  @UseGuards(JwtAuthGuard) // Se adiciona esta anotación para proteger el endpoint
+  
 
   @Post()
   crear(@Body() datos: Portatil) {
@@ -35,7 +38,7 @@ export class PortatilController  implements PortatilController{
       return errReturn(e, "Error al crear portatil");
     }
   }
-
+  
   @Put(":id")
   modificar(@Body() datos: Portatil, @Param('id') id: number) {
     try{
@@ -46,6 +49,7 @@ export class PortatilController  implements PortatilController{
     }
   }
 
+  @UseGuards(JwtAuthGuard) 
   @Delete(":id")
   eliminar(@Param('id') id: number) {
     try{
