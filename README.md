@@ -631,3 +631,63 @@ Y verificamos en el navegador el correcto cambio:
 
 ![](./images/patchok1.png)
 
+# PRÁCTICA 3: DESPLEGANDO EN LA NUBE
+
+### Desplegar una aplicación en la nube
+
+1. El proceso de hosting se opta por utilizar el servicio gratuito de `Deta`.
+
+2. Se inicia descargando deta a traves de la terminal. 
+
+    ![](./images/deta.png)
+
+3. Se agregan las variables de entorno.
+
+    ![](./images/entorno.png)  
+
+4. Se inicia sesión en deta:
+
+    ![](./images/detaweb.png) 
+
+5. Se crea archivo `src/index.ts`:
+
+    ![](./images/index.png) 
+
+6. sea crea el archivo raíz `index.js`:
+
+    ![](./images/indexjs.png) 
+
+7. Compilamos el proyecto:
+     ![](./images/nestrun.png) 
+
+8. Ahora se publica la aplicación por medio de `deta`, sin embargo, primero se crea el proyecto desde la aplicación:
+
+![](./images/detapro.png) 
+
+Luego se ejecuta `deta new --node ./practica_02/` desde la terminal:  
+
+![](./images/detanew.png) 
+
+9. Actualizamos la aplicación desde la terminal:
+
+![](./images/detaup.png) 
+
+10. Desplegamos la aplicación desde la terminal:
+
+![](./images/detadep.png) 
+
+11. Activamos logs de la aplicación:
+
+![](./images/detavisor.png) 
+
+12. Resultados obtenidos en al acceder a traves del web link
+
+![](./images/detalink.png) 
+
+### Conectado a una base de datos
+
+1. Primer paso es crear un usuario en mongodb
+
+2. Instalar dependecias TypeORM y MongoDB
+
+![](./images/insta.png) 
