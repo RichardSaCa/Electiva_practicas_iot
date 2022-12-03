@@ -11,7 +11,7 @@ import { UsersModule } from './users/users.module';
     UsersModule,
     TypeOrmModule.forRoot({
        type: 'mongodb',
-       url: 'mongodb+srv://admin:<password>@cluster0.ico1ydr.mongodb.net/?retryWrites=true&w=majority',
+       url: 'mongodb+srv://admin:admin@cluster0.ico1ydr.mongodb.net/?retryWrites=true&w=majority',
        useNewUrlParser: true,
        useUnifiedTopology: true,
        synchronize: true, // Solo para desarrollo
