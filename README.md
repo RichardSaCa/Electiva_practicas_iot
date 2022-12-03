@@ -631,7 +631,7 @@ Y verificamos en el navegador el correcto cambio:
 
 ![](./images/patchok1.png)
 
-# PRÁCTICA 3: DESPLEGANDO EN LA NUBE
+# PRÁCTICA 4: DESPLEGANDO EN LA NUBE
 
 ### Desplegar una aplicación en la nube
 
@@ -691,3 +691,31 @@ Luego se ejecuta `deta new --node ./practica_02/` desde la terminal:
 2. Instalar dependecias TypeORM y MongoDB
 
 ![](./images/insta.png) 
+
+3. Reemplazando la url en el archivo `src/app.module.ts`:
+
+![](./images/mongo.png) 
+
+4. Creando archivo para modelar la entidad:
+
+![](./images/entity.png) 
+
+5. Agregando entidad a la configuración del modulo:
+
+![](./images/entitymodule.png) 
+
+6. Adicionando constructor del servicio
+
+![](./images/entity1.png) 
+
+7. Se modifica los métodos para que utilicen el repositorio:
+
+![](./images/services.png) 
+
+8. Ejecutamos un POST para almacenar un computador en la base de datos:
+
+![](./images/base.png) 
+
+9. Finalmente verificamos con un GET en el navegador que se haya creado correctamente el computador:
+
+![](./images/conexion.png) 
