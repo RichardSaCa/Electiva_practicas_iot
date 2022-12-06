@@ -1,3 +1,6 @@
+### INFORMACION DE RAMAS UTILIZADAS
+
+
 Rama informes: contiene el proceso realizado en las 4 practicas, 
 
 Rama practica_02: Archivos utilizados en practica 2, 
